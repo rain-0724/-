@@ -1,0 +1,603 @@
+/* グローバルスタイル */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+#app {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 画面管理 */
+.screen {
+    display: none;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* コンテナ */
+.container {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 2.5em;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 10px;
+}
+
+h3 {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+h4 {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #666;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+/* ボタン */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+    border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+    background: #667eea;
+    color: white;
+}
+
+.btn-success {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #45a049;
+}
+
+.btn-edit {
+    background: #2196F3;
+    color: white;
+    padding: 8px 15px;
+    font-size: 0.9em;
+}
+
+.btn-edit:hover {
+    background: #0b7dda;
+}
+
+.btn-danger {
+    background: #f44336;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #da190b;
+}
+
+.btn-back {
+    background: #f44336;
+    color: white;
+    align-self: flex-start;
+    margin-top: 20px;
+}
+
+.btn-back:hover {
+    background: #da190b;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* フォーム */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+input[readonly] {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+/* 選手管理画面 */
+.player-management-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.players-list {
+    background: #f9f9f9;
+    padding: 25px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+}
+
+.players-table-container {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.player-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr 150px;
+    gap: 15px;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+.player-item:hover {
+    background: #f5f5f5;
+}
+
+.player-item:last-child {
+    border-bottom: none;
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.player-position {
+    color: #999;
+    font-size: 0.9em;
+    margin-top: 3px;
+}
+
+.player-stats {
+    font-size: 0.85em;
+    color: #666;
+    line-height: 1.5;
+}
+
+.empty-message {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+}
+
+/* モーダル */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease-in;
+    overflow-y: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 40px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.3s ease-in;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 10px;
+}
+
+.stats-section {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #667eea;
+}
+
+/* オンラインフォーム */
+.form-group label {
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* ドラフト画面 */
+.draft-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.turn-info {
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.turn-info p {
+    margin: 0;
+}
+
+.draft-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.players-available {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #667eea;
+}
+
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.player-card {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.player-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+}
+
+.player-card.selected {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.player-card-name {
+    font-weight: 600;
+    font-size: 0.95em;
+    margin-bottom: 5px;
+}
+
+.player-card-position {
+    font-size: 0.8em;
+    opacity: 0.7;
+}
+
+.team-info-section,
+.other-teams-section {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.my-team {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.team-player {
+    background: white;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 4px solid #667eea;
+}
+
+.team-player-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.team-player-position {
+    font-size: 0.85em;
+    color: #999;
+}
+
+.other-teams-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.other-team {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.other-team-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.draft-action {
+    text-align: center;
+    padding: 20px;
+    background: #f0f0f0;
+    border-radius: 8px;
+}
+
+.draft-action button {
+    min-width: 200px;
+}
+
+/* シミュレーション画面 */
+.simulation-progress {
+    margin: 30px 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 40px;
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    width: 0%;
+    transition: width 0.3s;
+}
+
+.simulation-log {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.log-entry {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+/* 結果画面 */
+.results-container {
+    display: grid;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.result-card {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 5px solid #667eea;
+}
+
+.result-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.result-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.stat-item {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-label {
+    color: #999;
+    font-size: 0.85em;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #667eea;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .player-management-content {
+        grid-template-columns: 1fr;
+    }
+
+    .draft-content {
+        grid-template-columns: 1fr;
+    }
+
+    .player-item {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+        margin: 20% auto;
+    }
+}

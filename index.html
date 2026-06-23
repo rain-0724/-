@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ドラフト野球ゲーム</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- メニュー画面 -->
+        <div id="menuScreen" class="screen active">
+            <div class="container">
+                <h1>⚾ ドラフト野球ゲーム</h1>
+                <p>メニューを選択してください</p>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="showPlayerManagement()">
+                        👥 選手管理
+                    </button>
+                    <button class="btn btn-primary" onclick="showModeSelection()">
+                        🎮 ゲーム開始
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 選手管理画面 -->
+        <div id="playerManagement" class="screen">
+            <div class="container">
+                <h2>👥 選手管理</h2>
+                
+                <!-- 新規選手登録ボタン -->
+                <div style="margin-bottom: 30px;">
+                    <button class="btn btn-success" onclick="showCreatePlayerModal()" style="width: 100%; max-width: 300px;">
+                        ➕ 新しい選手を作成
+                    </button>
+                </div>
+
+                <!-- 選手一覧 -->
+                <div class="player-management-content">
+                    <div class="players-list">
+                        <h3>登録済み選手一覧 (<span id="playerCount">0</span>人)</h3>
+                        <div id="playersList" class="players-table-container">
+                            <p class="empty-message">選手がまだ登録されていません</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-back" onclick="backToMenu()">← メニューに戻る</button>
+            </div>
+        </div>
+
+        <!-- 新規選手作成モーダル -->
+        <div id="createPlayerModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCreatePlayerModal()">&times;</span>
+                <h2>新しい選手を作成</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newPlayerName">選手名:</label>
+                        <input type="text" id="newPlayerName" placeholder="選手の名前" maxlength="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPlayerPosition">ポジション:</label>
+                        <select id="newPlayerPosition" onchange="updateNewPlayerStatsDisplay()">
+                            <option value="投手">投手</option>
+                            <option value="捕手">捕手</option>
+                            <option value="一塁手">一塁手</option>
+                            <option value="二塁手">二塁手</option>
+                            <option value="三塁手">三塁手</option>
+                            <option value="遊撃手">遊撃手</option>
+                            <option value="左翼手">左翼手</option>
+                            <option value="中堅手">中堅手</option>
+                            <option value="右翼手">右翼手</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 野手用成績 -->
+                <div id="newBatterStats" class="stats-section">
+                    <h4>野手成績</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newBattingAverage">打率 (0.000～1.000):</label>
+                            <input type="number" id="newBattingAverage" placeholder="0.300" min="0" max="1" step="0.001">
+                        </div>
+                        <div class="form-group">
+                            <label for="newHomeRuns">本塁打数 (シーズン):</label>
+                            <input type="number" id="newHomeRuns" placeholder="25" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="newStolenBases">盗塁数 (シーズン):</label>
+                            <input type="number" id="newStolenBases" placeholder="15" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 投手用成績 -->
+                <div id="newPitcherStats" class="stats-section" style="display: none;">
+                    <h4>投手成績</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newEra">防御率 (ERA):</label>
+                            <input type="number" id="newEra" placeholder="3.50" min="0" max="10" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="newStrikeouts">奪三振率 (K/9):</label>
+                            <input type="number" id="newStrikeouts" placeholder="9.5" min="0" max="15" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="newInningsPitched">投球回数 (シーズン):</label>
+                            <input type="number" id="newInningsPitched" placeholder="200" min="0" max="300" step="0.1">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px; gap: 10px;">
+                    <button class="btn btn-success" onclick="createNewPlayer()">選手を作成</button>
+                    <button class="btn btn-back" onclick="closeCreatePlayerModal()">キャンセル</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 選手編集モーダル -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditModal()">&times;</span>
+                <h2>選手情報を編集</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPlayerName">選手名:</label>
+                        <input type="text" id="editPlayerName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPlayerPosition">ポジション:</label>
+                        <input type="text" id="editPlayerPosition" readonly>
+                    </div>
+                </div>
+
+                <!-- 野手用成績 -->
+                <div id="editBatterStats" class="stats-section">
+                    <h4>野手成績</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editBattingAverage">打率 (0.000～1.000):</label>
+                            <input type="number" id="editBattingAverage" min="0" max="1" step="0.001">
+                        </div>
+                        <div class="form-group">
+                            <label for="editHomeRuns">本塁打数 (シーズン):</label>
+                            <input type="number" id="editHomeRuns" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="editStolenBases">盗塁数 (シーズン):</label>
+                            <input type="number" id="editStolenBases" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 投手用成績 -->
+                <div id="editPitcherStats" class="stats-section" style="display: none;">
+                    <h4>投手成績</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editEra">防御率 (ERA):</label>
+                            <input type="number" id="editEra" min="0" max="10" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="editStrikeouts">奪三振率 (K/9):</label>
+                            <input type="number" id="editStrikeouts" min="0" max="15" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="editInningsPitched">投球回数 (シーズン):</label>
+                            <input type="number" id="editInningsPitched" min="0" max="300" step="0.1">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px; gap: 10px;">
+                    <button class="btn btn-success" onclick="saveEditedPlayer()">保存</button>
+                    <button class="btn btn-danger" onclick="deleteEditingPlayer()" style="background-color: #f44336;">削除</button>
+                    <button class="btn btn-back" onclick="closeEditModal()">キャンセル</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- モード選択画面 -->
+        <div id="modeSelection" class="screen">
+            <div class="container">
+                <h1>⚾ ドラフト野球ゲーム</h1>
+                <p>ゲームモードを選択してください</p>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="startOfflineMode()">
+                        🤖 CPUと対戦
+                    </button>
+                    <button class="btn btn-primary" onclick="showOnlineSetup()">
+                        👥 オンライン対戦
+                    </button>
+                </div>
+                <button class="btn btn-back" onclick="backToMenu()">← メニューに戻る</button>
+            </div>
+        </div>
+
+        <!-- オンラインセットアップ画面 -->
+        <div id="onlineSetup" class="screen">
+            <div class="container">
+                <h2>オンライン対戦設定</h2>
+                <div class="form-group">
+                    <label>プレイ方法を選択:</label>
+                    <button class="btn btn-secondary" onclick="showCreateRoom()">
+                        🆕 ルーム作成
+                    </button>
+                    <button class="btn btn-secondary" onclick="showJoinRoom()">
+                        🔗 ルーム参加
+                    </button>
+                </div>
+                <button class="btn btn-back" onclick="showModeSelection()">← 戻る</button>
+            </div>
+        </div>
+
+        <!-- ルーム作成画面 -->
+        <div id="createRoom" class="screen">
+            <div class="container">
+                <h2>ルームを作成</h2>
+                <div class="form-group">
+                    <label for="playerName1">プレイヤー名:</label>
+                    <input type="text" id="playerName1" placeholder="あなたの名前" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label>参加者数:</label>
+                    <select id="playerCount">
+                        <option value="2">2人</option>
+                        <option value="3">3人</option>
+                        <option value="4">4人</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="createRoom()">ルーム作成</button>
+                <button class="btn btn-back" onclick="showOnlineSetup()">← 戻る</button>
+            </div>
+        </div>
+
+        <!-- ルーム参加画面 -->
+        <div id="joinRoom" class="screen">
+            <div class="container">
+                <h2>ルームに参加</h2>
+                <div class="form-group">
+                    <label for="playerName2">プレイヤー名:</label>
+                    <input type="text" id="playerName2" placeholder="あなたの名前" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label for="roomCode">合言葉 (4文字):</label>
+                    <input type="text" id="roomCode" placeholder="XXXX" maxlength="4" style="text-transform: uppercase;">
+                </div>
+                <button class="btn btn-primary" onclick="joinRoom()">参加する</button>
+                <button class="btn btn-back" onclick="showOnlineSetup()">← 戻る</button>
+            </div>
+        </div>
+
+        <!-- ドラフト画面 -->
+        <div id="draftScreen" class="screen">
+            <div class="container">
+                <div class="draft-header">
+                    <h2>ドラフト会議 - <span id="currentRound">第1巡</span></h2>
+                    <div class="turn-info">
+                        <p>現在のターン: <strong id="currentTurn"></strong></p>
+                    </div>
+                </div>
+
+                <div class="draft-content">
+                    <!-- 利用可能選手一覧 -->
+                    <div class="players-available">
+                        <h3>利用可能な選手</h3>
+                        <div id="availablePlayersList" class="players-grid"></div>
+                    </div>
+
+                    <!-- チーム情報 -->
+                    <div class="team-info-section">
+                        <h3>あなたのチーム</h3>
+                        <div id="myTeam" class="my-team"></div>
+                    </div>
+
+                    <!-- 他のチーム情報 -->
+                    <div class="other-teams-section">
+                        <h3>他のチーム</h3>
+                        <div id="otherTeams" class="other-teams-grid"></div>
+                    </div>
+                </div>
+
+                <div class="draft-action" id="draftAction"></div>
+            </div>
+        </div>
+
+        <!-- シーズンシミュレーション画面 -->
+        <div id="simulationScreen" class="screen">
+            <div class="container">
+                <h2>⚾ シーズンシミュレーション中...</h2>
+                <div class="simulation-progress">
+                    <div id="gameProgress" class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                    <p id="gameCount">0試合 / 143試合</p>
+                </div>
+                <div id="simulationLog" class="simulation-log"></div>
+            </div>
+        </div>
+
+        <!-- 結果画面 -->
+        <div id="resultScreen" class="screen">
+            <div class="container">
+                <h2>シーズン終了 - 結果</h2>
+                <div id="results" class="results-container"></div>
+                <button class="btn btn-primary" onclick="backToMenu()">メニューに戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
